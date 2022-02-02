@@ -19,7 +19,9 @@
         max-width="344"
         outlined
       >
-      <v-icon>mdi-alert-circle-outline</v-icon>
+      <v-icon
+        color=""
+      >mdi-alert-circle-outline</v-icon>
       <v-card-text>
         Some text
       </v-card-text>
