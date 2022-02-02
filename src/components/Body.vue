@@ -15,8 +15,6 @@
         </template>
       </v-text-field>
       <v-card
-        class="mx-auto"
-        max-width="344"
         outlined
       >
       <v-icon>mdi-alert-circle-outline</v-icon>
