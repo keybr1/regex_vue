@@ -29,22 +29,17 @@
         dense
       >
         <v-list-item-group
-          v-model="group"
           active-class="deep-purple--text text--accent-4"
         >
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Home</v-list-item-title>
+          <v-list-item
+            v-for="(challenge, i) in challenges"
+            :key="i"
+          >
+            <v-list-item-title>
+              {{ challenge.name }}
+            </v-list-item-title>
           </v-list-item>
 
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Account</v-list-item-title>
-          </v-list-item>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -52,9 +47,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data: () => ({
     drawer: false
-  })
+  }),
+  computed: {
+    ...mapState(['challenges', 'currIdx'])
+  }
 }
 </script>
