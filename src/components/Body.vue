@@ -1,7 +1,11 @@
 <template>
   <v-row>
     <v-col sm="10">
-      <h3 v-html="$options.filters.highlightFilter(text, userRegex, $style)"></h3>
+      <h2
+        v-html="$options.filters.highlightFilter(
+          currChallenge.fullText, userRegex, $style)"
+        class="mt-5 mb-4"
+      ></h2>
       <v-text-field
         v-model="userRegex"
         placeholder="Enter Regex"
@@ -17,9 +21,11 @@
       <v-card
         outlined
       >
-      <v-icon>mdi-alert-circle-outline</v-icon>
       <v-card-text>
-        Some text
+        <v-icon
+          color="cyan darken-3"
+        >mdi-alert-circle-outline</v-icon>
+        {{ currChallenge.info }}
       </v-card-text>
       </v-card>
     </v-col>
@@ -27,10 +33,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   data () {
     return {
-      text: 'Some text more text for everyone',
       userRegex: ''
     }
   },
@@ -40,6 +46,9 @@ export default {
       const newValue = value.replace(regex, (text) => `<span class="${$style.highlight}">${text}</span>`)
       return newValue
     }
+  },
+  computed: {
+    ...mapGetters(['currChallenge'])
   }
 }
 </script>
