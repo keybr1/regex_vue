@@ -9,6 +9,7 @@
       <v-text-field
         v-model="userRegex"
         placeholder="Enter Regex"
+        @keypress.enter="nextChallenge"
         outlined
       >
         <template v-slot:prepend>
@@ -33,7 +34,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -42,13 +43,23 @@ export default {
   },
   filters: {
     highlightFilter (value, userRegex, $style) {
-      const regex = new RegExp(userRegex, 'g')
+      const regex = new RegExp(userRegex)
       const newValue = value.replace(regex, (text) => `<span class="${$style.highlight}">${text}</span>`)
       return newValue
     }
   },
   computed: {
     ...mapGetters(['currChallenge'])
+  },
+  methods: {
+    ...mapMutations(['nextChallenge']),
+    nextChallenge () {
+      const regex = new RegExp(this.userRegex)
+
+      if (regex.test(this.currChallenge.fulltext)) {
+        this.nextChallenge()
+      }
+    }
   }
 }
 </script>

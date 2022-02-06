@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    currIdx: 1,
+    currIdx: 0,
     challenges
   },
   getters: {
@@ -19,6 +19,12 @@ export default new Vuex.Store({
 
   },
   mutations: {
+    navigateToChallenge (state, idx) {
+      state.currIdx = idx
+    },
+    nextChallenge (state) {
+      state.currIdx += 1
+    }
   },
   actions: {
   },
