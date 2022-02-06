@@ -34,6 +34,7 @@
           <v-list-item
             v-for="(challenge, i) in challenges"
             :key="i"
+            @click="navigateToChallenge(i)"
           >
             <v-list-item-title>
               {{ challenge.name }}
@@ -47,11 +48,14 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
   data: () => ({
     drawer: false
   }),
+  methods: {
+    ...mapMutations(['navigateToChallenge'])
+  },
   computed: {
     ...mapState(['challenges', 'currIdx'])
   }
