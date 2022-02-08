@@ -1,13 +1,27 @@
 export default [
   {
-    name: 'Plain Text',
-    fullText: 'outmeal',
-    info: 'Type exact characters to match'
+    name: 'Match Text',
+    fullText: 'oatmeal',
+    info: 'Type exact characters to match.'
+  },
+  {
+    name: 'Match Lowercase',
+    fullText: 'toast',
+    info: 'Use a capture group for lowercase letters: [a-z].'
+  },
+  {
+    name: 'Match Uppercase',
+    fullText: 'TOAST',
+    info: 'Use a capture group for uppercase letters: [A-Z].'
+  },
+  {
+    name: 'Match Mixed-cases',
+    fullText: 'Avocado',
+    info: 'Use a capture group for uppercase letters: [A-Za-z].'
   },
   {
     name: 'Phrases',
-    fullText: 'Avocado toast is awesome!',
-    info: 'You can match the spaces in a string as well by just adding the space character in your regex. Match with spaces: [A-Z a-z]+.'
-
+    fullText: 'Avocado toast is awesome',
+    info: 'Match with spaces: [A-Z a-z].'
   }
 ]
