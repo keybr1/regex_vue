@@ -71,7 +71,7 @@ export default {
         const newValue = value.replace(regex, (text) => `<span class="${$style.highlight}">${text}</span>`)
         return newValue
       } catch (err) {
-        console.log(err)
+        console.error(err)
         return value
       }
     }
