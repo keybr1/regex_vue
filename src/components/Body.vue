@@ -5,7 +5,7 @@
         <v-col cols="12">
           <h2
             v-html="$options.filters.highlightFilter(
-              currChallenge.fullText, userRegex, $style)"
+              $store.getters.currChallenge.fullText, userRegex, $style)"
             class="mt-5 mb-4"
           ></h2>
         </v-col>
@@ -15,7 +15,7 @@
           <v-text-field
             v-model="userRegex"
             placeholder="Enter Regex"
-            @keypress.enter="nextChallenge"
+            @keypress.enter.stop="nextChallenge"
             outlined
           >
             <template v-slot:prepend>
@@ -31,7 +31,7 @@
             disabled
             v-model="userFlags"
             placeholder="Enter Flags"
-            @keypress.enter="nextChallenge"
+            @keypress.enter="this.$store.getters.nextChallenge"
             outlined
           >
           </v-text-field>
@@ -47,7 +47,7 @@
               <v-icon
                 color="cyan darken-3"
               >mdi-alert-circle-outline</v-icon>
-              {{ currChallenge.info }}
+              {{ this.$store.getters.currChallenge.info }}
             </v-card-text>
           </v-card>
         </v-col>
@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -67,21 +66,25 @@ export default {
   },
   filters: {
     highlightFilter (value, userRegex, $style) {
-      const regex = new RegExp(userRegex)
-      const newValue = value.replace(regex, (text) => `<span class="${$style.highlight}">${text}</span>`)
-      return newValue
+      try {
+        const regex = new RegExp(userRegex)
+        const newValue = value.replace(regex, (text) => `<span class="${$style.highlight}">${text}</span>`)
+        return newValue
+      } catch (err) {
+        console.log(err)
+        return value
+      }
     }
   },
-  computed: {
-    ...mapGetters(['currChallenge'])
-  },
   methods: {
-    ...mapMutations(['nextChallenge']),
     nextChallenge () {
+      const currIdx = this.$store.state.currIdx
       const regex = new RegExp(this.userRegex)
 
-      if (regex.test(this.currChallenge.fulltext)) {
-        this.nextChallenge()
+      if (regex.test(this.$store.getters.currChallenge.fulltext)) {
+        this.$store.commit('navigateToChallenge', currIdx + 1)
+      } else {
+        console.log('no!')
       }
     }
   }

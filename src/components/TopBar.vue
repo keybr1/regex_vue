@@ -51,7 +51,7 @@
 import { mapState, mapMutations } from 'vuex'
 export default {
   data: () => ({
-    drawer: false
+    drawer: true
   }),
   methods: {
     ...mapMutations(['navigateToChallenge'])
