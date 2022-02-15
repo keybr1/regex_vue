@@ -16,7 +16,10 @@
             v-model="userRegex"
             placeholder="Enter Regex"
             @keypress.enter.stop="nextChallenge"
+            @keyup="checkValidRegex"
             outlined
+            :error="regexError"
+            :error-messages="errMsg"
           >
             <template v-slot:prepend>
             /
@@ -28,7 +31,7 @@
         </v-col>
         <v-col cols="3">
           <v-text-field
-            disabled
+            :disabled="!this.$store.getters.currChallenge.needFlags"
             v-model="userFlags"
             placeholder="Enter Flags"
             @keypress.enter="this.$store.getters.nextChallenge"
@@ -61,7 +64,10 @@ export default {
   data () {
     return {
       userRegex: '',
-      userFlags: ''
+      userFlags: '',
+      errMsg: '',
+      regexError: false,
+      flagsError: false
     }
   },
   filters: {
@@ -70,13 +76,22 @@ export default {
         const regex = new RegExp(userRegex)
         const newValue = value.replace(regex, (text) => `<span class="${$style.highlight}">${text}</span>`)
         return newValue
-      } catch (err) {
-        console.error(err)
+      } catch {
         return value
       }
     }
   },
   methods: {
+    checkValidRegex () {
+      try {
+        RegExp(this.userRegex)
+        this.regexError = false
+        this.errMsg = ''
+      } catch {
+        this.regexError = true
+        this.errMsg = 'Invalid Regex'
+      }
+    },
     nextChallenge () {
       const currIdx = this.$store.state.currIdx
       const regex = new RegExp(this.userRegex)
