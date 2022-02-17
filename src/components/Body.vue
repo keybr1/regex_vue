@@ -97,7 +97,7 @@ export default {
       const regex = new RegExp(this.userRegex)
 
       if (regex.test(this.$store.getters.currChallenge.fulltext)) {
-        this.$store.commit('navigateToChallenge', currIdx + 1)
+        this.$store.dispatch('navigateToChallenge', currIdx + 1)
       } else {
         console.log('no!')
       }
