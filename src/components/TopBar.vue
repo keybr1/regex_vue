@@ -29,7 +29,7 @@
         dense
       >
         <v-list-item-group
-          active-class="deep-purple--text text--accent-4"
+          active-class="blue-grey--text text--accent-4"
         >
           <v-list-item
             v-for="(challenge, i) in challenges"

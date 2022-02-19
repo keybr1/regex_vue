@@ -24,9 +24,14 @@ export default new Vuex.Store({
   actions: {
     navigateToChallenge ({ commit, state }, idx) {
       if (state.challenges.length >= idx + 1) {
-        // check current route
-        console.log(router)
-        commit('updateCurrentChallenge', idx)
+        try {
+          if (router.history.current.name !== 'home') {
+            router.push({ name: 'home' })
+          }
+          commit('updateCurrentChallenge', idx)
+        } catch (err) {
+          console.log(err)
+        }
       } else {
         router.push({ name: 'completed' })
       }

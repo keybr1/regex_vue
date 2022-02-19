@@ -5,7 +5,11 @@
         <v-col cols="12">
           <h2
             v-html="$options.filters.highlightFilter(
-              $store.getters.currChallenge.fullText, userRegex, $style)"
+              $store.getters.currChallenge.fullText,
+              userRegex,
+              userFlags,
+              $style
+            )"
             class="mt-5 mb-4"
           ></h2>
         </v-col>
@@ -56,6 +60,16 @@
         </v-col>
       </v-row>
     </v-col>
+    <v-snackbar
+      v-model="snackbar"
+      color="blue-grey"
+      absolute
+      right
+      elevation="24"
+      top
+    >
+    Incorrect Answer. Try again
+    </v-snackbar>
   </v-row>
 </template>
 
@@ -67,14 +81,16 @@ export default {
       userFlags: '',
       errMsg: '',
       regexError: false,
-      flagsError: false
+      flagsError: false,
+      snackbar: false
     }
   },
   filters: {
-    highlightFilter (value, userRegex, $style) {
+    highlightFilter (value, userRegex, userFlags, $style) {
       try {
-        const regex = new RegExp(userRegex)
-        const newValue = value.replace(regex, (text) => `<span class="${$style.highlight}">${text}</span>`)
+        const regex = new RegExp(userRegex, userFlags)
+        const newValue = value.replace(regex, (text) =>
+        `<span class="${$style.highlight}">${text}</span>`)
         return newValue
       } catch {
         return value
@@ -84,7 +100,8 @@ export default {
   methods: {
     checkValidRegex () {
       try {
-        RegExp(this.userRegex)
+        // eslint-disable-next-line no-new
+        new RegExp(this.userRegex, this.userFlags)
         this.regexError = false
         this.errMsg = ''
       } catch {
@@ -94,12 +111,12 @@ export default {
     },
     nextChallenge () {
       const currIdx = this.$store.state.currIdx
-      const regex = new RegExp(this.userRegex)
+      const regex = new RegExp(this.userRegex, this.userFlags)
 
-      if (regex.test(this.$store.getters.currChallenge.fulltext)) {
+      if (regex.test(this.$store.getters.currChallenge.toMatch)) {
         this.$store.dispatch('navigateToChallenge', currIdx + 1)
       } else {
-        console.log('no!')
+        this.snackbar = true
       }
     }
   }
