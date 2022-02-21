@@ -35,7 +35,7 @@
         </v-col>
         <v-col cols="3">
           <v-text-field
-            :disabled="!this.$store.getters.currChallenge.needFlags"
+            :disabled="!this.$store.getters.currChallenge.flags"
             v-model="userFlags"
             placeholder="Enter Flags"
             @keypress.enter="this.$store.getters.nextChallenge"
@@ -62,13 +62,13 @@
     </v-col>
     <v-snackbar
       v-model="snackbar"
-      color="blue-grey"
+      :color="snackColor"
       absolute
       right
       elevation="24"
       top
     >
-    Incorrect Answer. Try again
+    {{ snackMessage }}
     </v-snackbar>
   </v-row>
 </template>
@@ -82,7 +82,9 @@ export default {
       errMsg: '',
       regexError: false,
       flagsError: false,
-      snackbar: false
+      snackbar: false,
+      snackColor: 'error',
+      snackMessage: 'Incorrect answer. Try again.'
     }
   },
   filters: {
@@ -113,9 +115,27 @@ export default {
       const currIdx = this.$store.state.currIdx
       const regex = new RegExp(this.userRegex, this.userFlags)
 
-      if (regex.test(this.$store.getters.currChallenge.toMatch)) {
+      const { toMatch, flags } = this.$store.getters.currentChallenge
+      let unmatched = []
+      let valid = false
+
+      if (!flags || (this.userFlags && this.userFlags.includes(flags))) {
+        valid = true
+        unmatched = toMatch.filter((str) => {
+          const matched = str.match(regex)
+          return !matched || matched[0] !== str
+        })
+      }
+      if (valid && !unmatched.length) {
+        this.userRegex = ''
+        this.userFlags = ''
+        this.snackColor = 'success'
+        this.snackMessage = 'Great job! Challenge completed.'
+        this.snackbar = true
         this.$store.dispatch('navigateToChallenge', currIdx + 1)
       } else {
+        this.snackColor = 'error'
+        this.snackMessage = 'Incorrect answer. Try again.'
         this.snackbar = true
       }
     }
